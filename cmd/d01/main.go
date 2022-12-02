@@ -14,11 +14,12 @@ func main() {
 	if err != nil {
 		panic("couldn't read in file: " + dir + "/day1-1.txt")
 	}
-	highest := highestCount(string(bs))
-	fmt.Printf("highest calorie inventory: %d\n", highest)
+	counts := orderedCounts(string(bs))
+	fmt.Printf("highest calorie inventory: %d\n", counts[len(counts)-1])
+	fmt.Printf("top three summed: %d\n", sum(counts[len(counts)-3:]...)) // 69208 69434 69795]
 }
 
-func highestCount(input string) int {
+func orderedCounts(input string) []int {
 	lines := strings.Split(input, "\n")
 	var nums = make([]int, len(lines))
 	var elfIndx int
@@ -33,5 +34,13 @@ func highestCount(input string) int {
 		}
 	}
 	sort.Ints(nums)
-	return nums[len(nums)-1]
+	return nums
+}
+
+func sum(nums ...int) int {
+	var res int
+	for _, n := range nums {
+		res += n
+	}
+	return res
 }

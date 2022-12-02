@@ -16,7 +16,7 @@ func main() {
 	}
 	counts := orderedCounts(string(bs))
 	fmt.Printf("highest calorie inventory: %d\n", counts[len(counts)-1])
-	fmt.Printf("top three summed: %d\n", sum(counts[len(counts)-3:]...)) // 69208 69434 69795]
+	fmt.Printf("top three summed: %d\n", sum(counts[len(counts)-3:]...))
 }
 
 func orderedCounts(input string) []int {

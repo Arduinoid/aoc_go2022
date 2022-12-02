@@ -10,7 +10,7 @@ import (
 
 func main() {
 	dir := os.Getenv("INPUTDATA")
-	bs, err := os.ReadFile(dir + "/day1-1.txt")
+	bs, err := os.ReadFile(dir + "/day1.txt")
 	if err != nil {
 		panic("couldn't read in file: " + dir + "/day1-1.txt")
 	}

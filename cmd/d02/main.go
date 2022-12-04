@@ -29,15 +29,20 @@ const (
 
 func main() {
 	data := input.GetInputData("day2.txt")
-	lines := strings.Split(data, "\n")
+	op, ply := runGame(data)
+	fmt.Printf("opponent: %d player: %d", op, ply)
+}
+
+func runGame(input []string) (int, int) {
+
 	//shapes := map[string]int{"rock": 1, "paper": 2, "scissors": 3}
 	//oponent := map[string]string{"A": "rock", "B": "paper", "C": "scissors"}
 	//player := map[string]string{"X": "rock", "Y": "paper", "Z": "scissors"}
-	winChoice := map[string]string{"A": "Y", "B": "Z", "C": "X"}
-	loseChoice := map[string]string{"A": "Z", "B": "X", "C": "Y"}
-	drawChoice := map[string]string{"A": "X", "B": "Y", "C": "Z"}
+	//winChoice := map[string]string{"A": "Y", "B": "Z", "C": "X"}
+	//loseChoice := map[string]string{"A": "Z", "B": "X", "C": "Y"}
+	//drawChoice := map[string]string{"A": "X", "B": "Y", "C": "Z"}
 	//strat := []int{win, lose, draw}
-	stratChoice := map[int]map[string]string{win: winChoice, lose: loseChoice, draw: drawChoice}
+	//stratChoice := map[int]map[string]string{win: winChoice, lose: loseChoice, draw: drawChoice}
 	outcome := map[string]int{
 		"AX": 0, "AY": 1, "AZ": -1,
 		"BX": -1, "BY": 0, "BZ": 1,
@@ -49,13 +54,14 @@ func main() {
 		"CX": {3, 1}, "CY": {3, 2}, "CZ": {3, 3},
 	}
 	var opScore, pScore int
-	var st = make(state)
-	for i, line := range lines {
+	//var st = make(state)
+	for _, line := range input {
 		play := strings.Split(line, " ")
 		moves := play[0] + play[1]
-		if _, ok := st[outcome[moves]]; ok {
-
-		}
+		//if _, ok := st[outcome[moves]]; ok {
+		//
+		//}
+		moves = strings.TrimSpace(moves)
 		switch outcome[moves] {
 		case -1:
 			opScore += 6
@@ -68,7 +74,7 @@ func main() {
 		opScore += choiceScore[moves][0]
 		pScore += choiceScore[moves][1]
 	}
-	fmt.Printf("opponent: %d player: %d", opScore, pScore)
+	//fmt.Printf("opponent: %d player: %d", opScore, pScore)
 	/*
 		outcome if played as input
 		opponent: 13069 player: 10595
@@ -82,6 +88,7 @@ func main() {
 		if win, lose, draw sequence applied
 		opponent: 12025 player: 12500
 	*/
+	return opScore, pScore
 }
 
-type state map[int]bool
+//type state map[int]bool

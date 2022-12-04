@@ -21,74 +21,124 @@ paper    = 2 : BY
 scissors = 3 : CZ
 */
 
-const (
-	win  = 1
-	lose = -1
-	draw = 0
-)
-
 func main() {
 	data := input.GetInputData("day2.txt")
 	op, ply := runGame(data)
-	fmt.Printf("opponent: %d player: %d", op, ply)
+	fmt.Printf("opponent: %d player: %d\n", op, ply)
+	op2, ply2 := runGameP2(data)
+	fmt.Printf("part two -- opponent: %d player: %d\n", op2, ply2)
 }
 
 func runGame(input []string) (int, int) {
+	var opScore, pScore int
+	for _, line := range input {
+		moves := strings.ReplaceAll(strings.TrimSpace(line), " ", "")
+		o, p := roundScore(moves)
+		opScore += o
+		pScore += p
+	}
+	return opScore, pScore
+}
 
-	//shapes := map[string]int{"rock": 1, "paper": 2, "scissors": 3}
-	//oponent := map[string]string{"A": "rock", "B": "paper", "C": "scissors"}
-	//player := map[string]string{"X": "rock", "Y": "paper", "Z": "scissors"}
-	//winChoice := map[string]string{"A": "Y", "B": "Z", "C": "X"}
-	//loseChoice := map[string]string{"A": "Z", "B": "X", "C": "Y"}
-	//drawChoice := map[string]string{"A": "X", "B": "Y", "C": "Z"}
-	//strat := []int{win, lose, draw}
-	//stratChoice := map[int]map[string]string{win: winChoice, lose: loseChoice, draw: drawChoice}
+func runGameP2(input []string) (int, int) {
+	var opScore, pScore int
+	for _, line := range input {
+		line = strings.TrimSpace(line)
+		moves := strings.Split(line, " ")
+		playerChoice := choose(moves)
+		o, p := roundScore(moves[0] + playerChoice)
+		opScore += o
+		pScore += p
+	}
+	return opScore, pScore
+}
+
+func choiceScore(choice string) int {
+	switch choice {
+	case "A", "X":
+		return 1
+	case "B", "Y":
+		return 2
+	case "C", "Z":
+		return 3
+	default:
+		return 0
+	}
+}
+
+func roundScore(moves string) (int, int) {
+	var opScore, pScore int
 	outcome := map[string]int{
 		"AX": 0, "AY": 1, "AZ": -1,
 		"BX": -1, "BY": 0, "BZ": 1,
 		"CX": 1, "CY": -1, "CZ": 0,
 	}
-	choiceScore := map[string][]int{
-		"AX": {1, 1}, "AY": {1, 2}, "AZ": {1, 3},
-		"BX": {2, 1}, "BY": {2, 2}, "BZ": {2, 3},
-		"CX": {3, 1}, "CY": {3, 2}, "CZ": {3, 3},
+	switch outcome[moves] {
+	case -1:
+		opScore += 6
+	case 0:
+		opScore += 3
+		pScore += 3
+	case 1:
+		pScore += 6
 	}
-	var opScore, pScore int
-	//var st = make(state)
-	for _, line := range input {
-		play := strings.Split(line, " ")
-		moves := play[0] + play[1]
-		//if _, ok := st[outcome[moves]]; ok {
-		//
-		//}
-		moves = strings.TrimSpace(moves)
-		switch outcome[moves] {
-		case -1:
-			opScore += 6
-		case 0:
-			opScore += 3
-			pScore += 3
-		case 1:
-			pScore += 6
-		}
-		opScore += choiceScore[moves][0]
-		pScore += choiceScore[moves][1]
-	}
-	//fmt.Printf("opponent: %d player: %d", opScore, pScore)
-	/*
-		outcome if played as input
-		opponent: 13069 player: 10595
-
-		if strategy applied from example
-			A Y - Rock, Paper
-			B X - Paper, Rock
-			C Z - Scissors, Scissors
-		opponent: 13978 player: 9428
-
-		if win, lose, draw sequence applied
-		opponent: 12025 player: 12500
-	*/
+	opScore += choiceScore(string(moves[0]))
+	pScore += choiceScore(string(moves[1]))
 	return opScore, pScore
 }
 
-//type state map[int]bool
+func win(op string) string {
+	switch op {
+	case "A":
+		return "Y"
+	case "B":
+		return "Z"
+	case "C":
+		return "X"
+	default:
+		return ""
+	}
+}
+
+func lose(op string) string {
+	switch op {
+	case "A":
+		return "Z"
+	case "B":
+		return "X"
+	case "C":
+		return "Y"
+	default:
+		return ""
+	}
+}
+
+func draw(op string) string {
+	switch op {
+	case "A":
+		return "X"
+	case "B":
+		return "Y"
+	case "C":
+		return "Z"
+	default:
+		return ""
+	}
+}
+
+func choose(result []string) string {
+	const (
+		strat    = 1
+		opponent = 0
+	)
+	switch result[strat] {
+	case "X":
+		return lose(result[opponent])
+	case "Y":
+		return draw(result[opponent])
+	case "Z":
+		return win(result[opponent])
+	default:
+		return ""
+	}
+}

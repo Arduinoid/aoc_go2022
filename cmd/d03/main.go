@@ -13,65 +13,44 @@ use math on the runes to calculate scores for each of the redundant items in the
 
 func main() {
 	data := input.GetInputData("day3.txt")
-	in := strings.Join(data, "")
-	fmt.Printf("priority item sum: %d\n", ruck(in))
+	fmt.Printf("priority item sum: %d\n", ruck(data))
+	var start = 'A'
+	for i := 0; i < +26; i++ {
+		fmt.Printf("%s=%d\n", string(start+rune(i)), start+rune(i)-'A'+27)
+	}
 }
 
-func ruck(input string) int {
-	const (
-		sackSize   = 12
-		pocketSize = sackSize / 2
-	)
-	var (
-		start  = 0
-		end    = 6
-		length = len(input)
-	)
-	// slice input into pocket sized chuncks
-	var pockets []string
-	for end <= length {
-		pockets = append(pockets, input[start:end])
-		start = end
-		end += pocketSize
-	}
-	// iterate over pocket sets
-	var pocketCount = len(pockets)
-	var rItems []rune
-	for i := 0; i < pocketCount; i += 2 {
-		if i+1 > pocketCount {
-			break
-		}
-		left := pockets[i]
-		right := pockets[i+1]
+func ruck(input []string) int {
+	var result int
+	for i := range input {
+		left := input[i][0 : len(input[i])/2]
+		right := input[i][len(input[i])/2:]
 		if !strings.ContainsAny(left, right) {
 			continue
 		}
-		// iterate over a pocket
+		var tempPocket string
 		for j := range left {
-			if strings.ContainsRune(right, rune(left[j])) {
-				rItems = append(rItems, rune(left[j]))
+			if !strings.ContainsRune(tempPocket, rune(left[j])) && strings.ContainsRune(right, rune(left[j])) {
+				tempPocket += string(left[j])
+				out := score(rune(left[j]))
+				result += out
 			}
 		}
 	}
-	//fmt.Printf("%+v\n", pockets)
-	//fmt.Printf("%+v\n", rItems)
 	fmt.Printf("a=%v, A=%v\n", 'a', 'A')
-	var result int
-	for i := range rItems {
-		result += score(rItems[i])
-	}
 	return result
 }
 
 func score(in rune) int {
 	const (
-		lowCaseOffset   = 96
-		upperCaseOffset = 64
+		lowA     = 'a'
+		upperA   = 'A'
+		alphaLen = 26
 	)
-	if in > lowCaseOffset && in < lowCaseOffset+26 {
-		return int(in) - lowCaseOffset
-	} else if in > upperCaseOffset && in < upperCaseOffset+26 {
-		return int(in) - upperCaseOffset + 26
+	if in >= lowA && in <= lowA+alphaLen {
+		return (int(in) - lowA) + 1
+	} else if in >= upperA && in <= upperA+alphaLen {
+		return (int(in) - upperA) + 27
 	}
 	return 0
 }

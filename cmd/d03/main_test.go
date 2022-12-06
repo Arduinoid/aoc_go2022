@@ -7,17 +7,25 @@ import (
 )
 
 const (
-	data = `vJrwpWtwJgWrhcsFMMfFFhFp
+	ruckData = `vJrwpWtwJgWrhcsFMMfFFhFp
 jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
 PmmdzqPrVvPwwTWBwg
 wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw`
 	expectedSum = 157
+
+	ruckBadgeData = `vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw`
+	expectedBadgeSum = 70
 )
 
 func TestRuck(t *testing.T) {
-	in := strings.Split(data, "\n")
+	in := strings.Split(ruckData, "\n")
 	assert.Equal(t, expectedSum, ruck(in))
 }
 
@@ -34,4 +42,9 @@ func TestScore(t *testing.T) {
 	assert.Equal(t, 52, score(Z))
 	assert.Equal(t, 26, score(z))
 	assert.Equal(t, 39, score(M))
+}
+
+func TestFindBadges(t *testing.T) {
+	in := strings.Split(ruckBadgeData, "\n")
+	assert.Equal(t, expectedBadgeSum, badges(in))
 }

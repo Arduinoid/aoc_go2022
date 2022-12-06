@@ -7,17 +7,10 @@ import (
 	"go_aoc/input"
 )
 
-/*
-use math on the runes to calculate scores for each of the redundant items in the pack
-*/
-
 func main() {
 	data := input.GetInputData("day3.txt")
 	fmt.Printf("priority item sum: %d\n", ruck(data))
-	var start = 'A'
-	for i := 0; i < +26; i++ {
-		fmt.Printf("%s=%d\n", string(start+rune(i)), start+rune(i)-'A'+27)
-	}
+	fmt.Printf("badge sum: %d\n", badges(data))
 }
 
 func ruck(input []string) int {
@@ -38,6 +31,37 @@ func ruck(input []string) int {
 		}
 	}
 	fmt.Printf("a=%v, A=%v\n", 'a', 'A')
+	return result
+}
+
+func badges(input []string) int {
+	/*
+		[1, 2, 3] [2] 0/3=0
+		[2, 4, 5]     1/3=0.333
+		[2, 5, 6]     2/3=0.666
+		[1, 2, 3] [2] 3/3=1
+		[2, 4, 5]
+		[2, 5, 6]
+	*/
+	var iset string
+	var result int
+	for i := 0; i < len(input); i += 3 {
+		// initialize and collect into intermediate array
+		iset = ""
+		firstElf := input[i]
+		secondElf := input[i+1]
+		thirdElf := input[i+2]
+		for j := range firstElf {
+			if !strings.ContainsRune(iset, rune(firstElf[j])) && strings.ContainsRune(secondElf, rune(firstElf[j])) {
+				iset += string(firstElf[j])
+			}
+		}
+		for k := range iset {
+			if strings.ContainsRune(thirdElf, rune(iset[k])) {
+				result += score(rune(iset[k]))
+			}
+		}
+	}
 	return result
 }
 

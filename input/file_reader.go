@@ -11,5 +11,5 @@ func GetInputData(filename string) []string {
 	if err != nil {
 		panic("couldn't read in file: " + dir + "/" + filename)
 	}
-	return strings.Split(string(bs), "\n")
+	return strings.Split(strings.ReplaceAll(string(bs), "\r", ""), "\n")
 }

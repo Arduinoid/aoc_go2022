@@ -36,10 +36,25 @@ func overlaps(input []string) int {
 }
 
 func intersect(a1, a2, b1, b2 int) bool {
-	if a1 >= b1 && a1 <= b2 || a2 <= b2 && a2 >= b1 {
+	/*
+		[a1 --- a2]
+		     [b1 --- b2]
+	*/
+	if a1 <= b1 && b1 <= a2 && a2 <= b2 {
 		return true
 	}
-	return false
+	/*
+		     [a1 --- a2]
+		[b1 --- b2]
+	*/
+	if b1 <= a1 && a1 <= b2 && b2 <= a2 {
+		return true
+	}
+	/*
+	   [a1 ----- a2]
+	     [b1 -- b2]
+	*/
+	return inRange(a1, a2, b1, b2)
 }
 
 func inRange(a1, a2, b1, b2 int) bool {

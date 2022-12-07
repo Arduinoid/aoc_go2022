@@ -38,9 +38,9 @@ func TestParsePairs(t *testing.T) {
 	assert.Equal(t, expect, parsePairs(in))
 }
 
-func TestIntersets(t *testing.T) {
-	assert.True(t, intersect(1, 2, 2, 3))
-	assert.False(t, intersect(1, 2, 3, 4))
-	assert.False(t, intersect(1, 4, 3, 3))
-	assert.True(t, intersect(4, 10, 3, 11))
+func TestIntersects(t *testing.T) {
+	assert.True(t, intersect(5, 7, 7, 9))
+	assert.True(t, intersect(2, 8, 3, 7))
+	assert.True(t, intersect(6, 6, 4, 6))
+	assert.True(t, intersect(2, 6, 4, 8))
 }

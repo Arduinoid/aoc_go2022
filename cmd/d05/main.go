@@ -10,10 +10,13 @@ import (
 func main() {
 	in := input.GetInputData("day5.txt")
 	stacks, moves := parse(in)
+	stacks2 := stacks.copy()
 	for i := range moves {
-		stacks.exec(moves[i])
+		stacks.exec9k(moves[i])
+		stacks2.exec9k1(moves[i])
 	}
-	fmt.Printf("top boxes: %s", stacks.top())
+	fmt.Printf("9000 top boxes: %s\n", stacks.top())
+	fmt.Printf("9001 top boxes: %s\n", stacks2.top())
 }
 
 func parse(in []string) (stack, [][]string) {
@@ -72,7 +75,7 @@ func parseMoves(in []string) [][]string {
 
 type stack map[string][]string
 
-func (s stack) exec(m []string) {
+func (s stack) exec9k(m []string) {
 	// move 7 from 3 to 9
 	// [0] [1][2][3][4][5]
 	count, err := strconv.Atoi(m[1])
@@ -96,10 +99,38 @@ func (s stack) exec(m []string) {
 	s[m[3]] = s[m[3]][:srcLen-count]
 }
 
+func (s stack) exec9k1(m []string) {
+	// move 7 from 3 to 9
+	// [0] [1][2][3][4][5]
+	count, err := strconv.Atoi(m[1])
+	if err != nil {
+		panic("could not parse instruction count")
+	}
+	srcLen := len(s[m[3]])
+	// if the amount of crates to remove is greater than crates at source then just take all of what is there
+	if count > srcLen {
+		s[m[5]] = append(s[m[5]], s[m[3]]...)
+		s[m[3]] = []string{} // clear our source crates
+		return
+	}
+	// otherwise start taking the desired number of crates
+	s[m[5]] = append(s[m[5]], s[m[3]][srcLen-count:]...)
+	// set source to no longer contain the moved crates
+	s[m[3]] = s[m[3]][:srcLen-count]
+}
+
 func (s stack) top() string {
 	var output string
 	for _, key := range s["keys"] {
 		output += s[key][len(s[key])-1]
 	}
 	return output
+}
+
+func (s stack) copy() stack {
+	var newStack = stack{}
+	for k, v := range s {
+		newStack[k] = v
+	}
+	return newStack
 }
